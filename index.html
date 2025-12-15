@@ -42,6 +42,32 @@
                 <button id="continueBtn" class="continue-btn">Ярмарка переехала в Нижний</button>
             </div>
         </div>
+        
+        <!-- Окно викторины -->
+        <div id="quizWindow" class="quiz-window">
+            <div class="quiz-content">
+                <div class="quiz-header">
+                    <h2>📚 Закрепите знания</h2>
+                    <div id="quizScore" class="quiz-score">Баллы: 0/5</div>
+                </div>
+                
+                <p id="quizQuestion" class="quiz-question"></p>
+                
+                <div id="quizOptions" class="quiz-options">
+                    <!-- Варианты ответов будут здесь -->
+                </div>
+                
+                <button id="quizNextBtn" class="quiz-next-btn" style="display: none;">Следующий вопрос →</button>
+            </div>
+            
+            <!-- Результаты викторины -->
+            <div id="quizResults" class="quiz-results">
+                <h2 id="resultsTitle" class="results-title"></h2>
+                <div id="resultsScore" class="results-score"></div>
+                <p id="resultsMessage" class="results-message"></p>
+                <button id="backToMenuBtn" class="back-to-menu-btn">🏠 В главное меню</button>
+            </div>
+        </div>
     </div>
     
     <script src="./game.js"></script>

@@ -1,6 +1,6 @@
 // Тексты для кейса №1
 const storyParts = [
-    `Взираю на сие пепелище...\n\n18 августа 1816 года огонь поглотил\n39 корпусов ярмарки. Но знай —\ntорги к тому моменту уже завершились.`,
+    `Взираю на сие пепелище...\n\n18 августа 1816 года огонь поглотил\n39 корпусов ярмарки. Но знай —\nторги к тому моменту уже завершились.`,
     
     `Странно, не правда ли?\n\nТорги кончались к Первому Спасу —\n1 августа. А пожар случился\nспустя более двух недель...`,
     
@@ -24,6 +24,7 @@ const continueBtn = document.getElementById('continueBtn');
 let currentPart = 0;
 let isTyping = false;
 let typingSpeed = 30; // мс между символами
+let typeTimeout = null;
 
 // Инициализация
 function initGame() {
@@ -40,6 +41,10 @@ function initGame() {
     continueBtn.addEventListener('click', function() {
         alert('Переход к следующему кейсу...\n(Это будет реализовано позже)');
     });
+    
+    // Добавляем возможность пропустить печать по клику на текст
+    storyText.addEventListener('click', skipTyping);
+    conclusionTextElement.addEventListener('click', skipTyping);
 }
 
 // Начать рассказ
@@ -58,14 +63,15 @@ function typeWriter(text, element) {
     isTyping = true;
     element.textContent = '';
     let i = 0;
+    let fullText = text;
     
     function type() {
-        if (i < text.length) {
+        if (i < fullText.length) {
             // Добавляем по одному символу
-            if (text.charAt(i) === '\n') {
+            if (fullText.charAt(i) === '\n') {
                 element.innerHTML += '<br>';
             } else {
-                element.textContent += text.charAt(i);
+                element.textContent += fullText.charAt(i);
             }
             i++;
             
@@ -73,7 +79,7 @@ function typeWriter(text, element) {
             playTypeSound();
             
             // Рекурсивный вызов с задержкой
-            setTimeout(type, typingSpeed);
+            typeTimeout = setTimeout(type, typingSpeed);
         } else {
             // Текст напечатан
             isTyping = false;
@@ -91,6 +97,31 @@ function typeWriter(text, element) {
     type();
 }
 
+// Пропустить печать (показать весь текст сразу)
+function skipTyping() {
+    if (isTyping && typeTimeout) {
+        clearTimeout(typeTimeout);
+        isTyping = false;
+        
+        // Показать весь текст
+        if (currentPart < storyParts.length) {
+            storyText.textContent = storyParts[currentPart];
+        } else {
+            conclusionTextElement.textContent = conclusionText;
+        }
+        
+        // Показать кнопку "Далее"
+        if (storyWindow.style.display === 'flex') {
+            nextBtn.style.display = 'block';
+            if (currentPart === storyParts.length - 1) {
+                nextBtn.textContent = 'К выводу →';
+            } else {
+                nextBtn.textContent = 'Далее →';
+            }
+        }
+    }
+}
+
 // Показать следующую часть
 function showNextPart() {
     if (isTyping) return; // Нельзя перейти дальше пока печатается
@@ -105,7 +136,17 @@ function showNextPart() {
         // Показать финальный вывод (тоже с эффектом печати)
         storyWindow.style.display = 'none';
         conclusionWindow.style.display = 'flex';
+        // Скрыть кнопку "Продолжить" пока печатается
+        continueBtn.style.display = 'none';
         typeWriter(conclusionText, conclusionTextElement);
+        
+        // Когда финальный текст напечатан, показать кнопку
+        const checkButton = setInterval(() => {
+            if (!isTyping) {
+                continueBtn.style.display = 'block';
+                clearInterval(checkButton);
+            }
+        }, 100);
     }
 }
 
@@ -133,6 +174,7 @@ function playTypeSound() {
         oscillator.stop(audioContext.currentTime + 0.05);
     } catch (e) {
         // Игнорируем ошибки аудио
+        console.log('Аудио контекст не поддерживается');
     }
 }
 
@@ -156,6 +198,7 @@ function playClickSound() {
         oscillator.stop(audioContext.currentTime + 0.1);
     } catch (e) {
         // Игнорируем ошибки аудио
+        console.log('Аудио контекст не поддерживается');
     }
 }
 
@@ -164,5 +207,7 @@ document.addEventListener('DOMContentLoaded', initGame);
 
 // Добавляем звук клика ко всем кнопкам
 document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', playClickSound);
+    button.addEventListener('click', function() {
+        playClickSound();
+    });
 });

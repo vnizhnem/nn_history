@@ -6,7 +6,7 @@ const storyParts = [
     
     `Присмотрись к берегу...Течение Волги постоянно подмывало его. Места для растущей ярмарки становилось всё меньше.`,
     
-    `Следствие назвало причиной «поджёг злоумышленных людей». Но признаний не было,и улик не нашли...`
+    `Следствие назвало причиной «поджёг злоумышленных людей». Но признаний не было, и улик не нашли...`
 ];
 
 const conclusionText = `Так что же на самом деле?..Пожар стал лишь поводом. Ярмарка переросла Макарьев. Нижний Новгород же — удобнее, просторнее, перспективнее.`;
@@ -32,7 +32,7 @@ const quizQuestions = [
             "1820",
             "1824"
         ],
-        correct: 1, // Индекс правильного ответа (0, 1, 2, 3)
+        correct: 1,
         explanation: "Пожар произошёл 18 августа 1816 года."
     },
     {
@@ -160,8 +160,8 @@ function startStory() {
     currentPart = 0;
     
     // Показываем кнопки навигации
-    nextBtn.style.display = 'none'; // Скрываем пока печатается
-    backBtn.style.display = 'none'; // В начале нет куда возвраваться
+    nextBtn.style.display = 'none';
+    backBtn.style.display = 'none';
     
     typeWriter(storyParts[currentPart], storyText);
 }
@@ -263,7 +263,6 @@ function showNextPart() {
             const checkButton = setInterval(() => {
                 if (!isTyping && continueBtn) {
                     continueBtn.style.display = 'block';
-                    // Меняем текст кнопки на "Закрепить знания"
                     continueBtn.textContent = '📚 Закрепить знания';
                     clearInterval(checkButton);
                 }
@@ -335,7 +334,7 @@ function showQuestion(questionIndex) {
     question.options.forEach((option, index) => {
         const optionBtn = document.createElement('button');
         optionBtn.className = 'quiz-option';
-        optionBtn.textContent = `${String.fromCharCode(65 + index)}) ${option}`; // A), B), C), D)
+        optionBtn.textContent = `${String.fromCharCode(65 + index)}) ${option}`;
         
         optionBtn.addEventListener('click', function() {
             if (quizActive) {
@@ -376,11 +375,14 @@ function checkAnswer(selectedIndex, buttonElement, correctIndex, explanation) {
             padding: 15px;
             background: rgba(45, 90, 28, 0.2);
             border-left: 4px solid #2d5a1c;
+            font-family: 'Press Start 2P', cursive;
             font-size: 14px;
             line-height: 1.5;
+            color: #f0e6d2;
+            text-align: center;
+            grid-column: 1 / -1;
         `;
         
-        // Вставляем пояснение после кнопок
         quizOptions.appendChild(explanationEl);
         
     } else {
@@ -402,8 +404,12 @@ function checkAnswer(selectedIndex, buttonElement, correctIndex, explanation) {
             padding: 15px;
             background: rgba(139, 0, 0, 0.2);
             border-left: 4px solid #8b0000;
+            font-family: 'Press Start 2P', cursive;
             font-size: 14px;
             line-height: 1.5;
+            color: #f0e6d2;
+            text-align: center;
+            grid-column: 1 / -1;
         `;
         
         quizOptions.appendChild(explanationEl);

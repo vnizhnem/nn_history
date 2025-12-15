@@ -1,0 +1,204 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: #000;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Контейнер игры */
+.game-container {
+    position: relative;
+    width: 1024px;
+    height: 768px;
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
+/* Фон */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+/* Князь */
+.knyaz {
+    position: absolute;
+    bottom: 50px;
+    right: 100px; /* Смотрит вправо, поэтому ставим справа */
+    width: 200px;
+    height: auto;
+    z-index: 2;
+    filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.7));
+}
+
+/* Кнопка начала */
+.start-btn-container {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    z-index: 3;
+}
+
+.start-btn {
+    background: rgba(139, 69, 19, 0.9); /* Цвет пергамента */
+    border: 4px solid #5d2906;
+    border-radius: 0;
+    padding: 15px 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s;
+}
+
+.start-btn:hover {
+    background: rgba(160, 82, 25, 0.95);
+    transform: scale(1.05);
+}
+
+.notice-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.btn-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    color: #f0e6d2;
+    text-shadow: 2px 2px 0 #000;
+}
+
+/* Окно рассказа */
+.story-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 4;
+    display: none; /* Скрыто по умолчанию */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.story-content {
+    background: rgba(30, 30, 30, 0.95);
+    border: 6px solid #8b4513;
+    padding: 40px;
+    max-width: 800px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(139, 69, 19, 0.5);
+}
+
+.story-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    line-height: 1.8;
+    color: #f0e6d2;
+    margin-bottom: 40px;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.next-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    background: #8b4513;
+    color: #f0e6d2;
+    border: 4px solid #5d2906;
+    padding: 15px 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.next-btn:hover {
+    background: #a0522d;
+    transform: scale(1.05);
+}
+
+/* Окно финального вывода */
+.conclusion-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 5;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.conclusion-content {
+    background: rgba(20, 20, 20, 0.95);
+    border: 8px solid #8b4513;
+    padding: 50px;
+    max-width: 900px;
+    text-align: center;
+}
+
+.conclusion-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #f0e6d2;
+    margin-bottom: 50px;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.continue-btn {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 18px;
+    background: #2d5a1c;
+    color: #f0e6d2;
+    border: 4px solid #1a3510;
+    padding: 20px 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.continue-btn:hover {
+    background: #3a7525;
+    transform: scale(1.05);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .story-text {
+        font-size: 14px;
+    }
+    
+    .conclusion-text {
+        font-size: 16px;
+    }
+    
+    .knyaz {
+        width: 150px;
+        right: 30px;
+        bottom: 30px;
+    }
+    
+    .start-btn-container {
+        top: 20px;
+        left: 20px;
+    }
+}

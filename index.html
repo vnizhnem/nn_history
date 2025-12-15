@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Исчезновение Макарьевской ярмарки</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Фон -->
+        <img src="assets/background.png" class="background" alt="Горящий монастырь">
+        
+        <!-- Князь-рассказчик -->
+        <img src="assets/knyaz.png" class="knyaz" alt="Князь">
+        
+        <!-- Кнопка начала рассказа -->
+        <div class="start-btn-container">
+            <button id="startBtn" class="start-btn">
+                <img src="assets/notice.png" alt="Свиток" class="notice-icon">
+                <span class="btn-text">Рассказать историю</span>
+            </button>
+        </div>
+        
+        <!-- Окно рассказа -->
+        <div id="storyWindow" class="story-window">
+            <div class="story-content">
+                <p id="storyText" class="story-text"></p>
+                <button id="nextBtn" class="next-btn">Далее →</button>
+            </div>
+        </div>
+        
+        <!-- Финальный вывод -->
+        <div id="conclusionWindow" class="conclusion-window">
+            <div class="conclusion-content">
+                <p id="conclusionText" class="conclusion-text"></p>
+                <button id="continueBtn" class="continue-btn">Ярмарка переехала в Нижний</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

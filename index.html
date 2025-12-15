@@ -2,22 +2,24 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Исчезновение Макарьевской ярмарки</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" href="./assets/notice.png" type="image/png">
 </head>
 <body>
     <div class="game-container">
         <!-- Фон -->
-        <img src="assets/background.png" class="background">
+        <img src="./assets/background.png" class="background" alt="Горящий монастырь">
         
-        <!-- Князь -->
-        <img src="assets/knyaz.png" class="knyaz">
+        <!-- Князь-рассказчик -->
+        <img src="./assets/knyaz.png" class="knyaz" alt="Князь">
         
-        <!-- Кнопка начала -->
+        <!-- Кнопка начала рассказа -->
         <div class="start-btn-container">
             <button id="startBtn" class="start-btn">
-                <img src="assets/notice.png" class="notice-icon">
+                <img src="./assets/notice.png" alt="Свиток" class="notice-icon">
                 <span class="btn-text">Рассказать историю</span>
             </button>
         </div>
@@ -39,6 +41,6 @@
         </div>
     </div>
     
-    <script src="script.js"></script>
+    <script src="./game.js"></script> <!-- ИЗМЕНИЛОСЬ ЗДЕСЬ! -->
 </body>
 </html>

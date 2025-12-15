@@ -1,28 +1,35 @@
 // Тексты для кейса №1 (исправленные с пробелами)
 const storyParts = [
-    `Взираю на сие пепелище...\n\n18 августа 1816 года огонь поглотил\n39 корпусов ярмарки. Но знай —\nторги к тому моменту уже завершились.`,
+    `Взираю на сие пепелище...18 августа 1816 года огонь поглотил 39 корпусов ярмарки. Но знай — торги к тому моменту уже завершились.`,
     
-    `Странно, не правда ли?\n\nТорги кончались к Первому Спасу —\n1 августа. А пожар случился\nспустя более двух недель...`,
+    `Странно, не правда ли? Торги кончались к Первому Спасу — 1 августа. А пожар случился спустя более двух недель...`,
     
-    `Присмотрись к берегу...\n\nТечение Волги постоянно подмывало его.\nМеста для растущей ярмарки\nстановилось всё меньше.`,
+    `Присмотрись к берегу...Течение Волги постоянно подмывало его. Места для растущей ярмарки становилось всё меньше.`,
     
-    `Следствие назвало причиной\n«поджёг злоумышленных людей».\nНо признаний не было,\nи улик не нашли...`
+    `Следствие назвало причиной «поджёг злоумышленных людей». Но признаний не было, и улик не нашли...`
 ];
 
-const conclusionText = `Так что же на самом деле?..\n\nПожар стал лишь поводом.\nЯрмарка переросла Макарьев.\nНижний Новгород же —\nудобнее, просторнее, перспективнее.`;
+const conclusionText = `Так что же на самом деле?.. Пожар стал лишь поводом. Ярмарка переросла Макарьев. Нижний Новгород же — удобнее, просторнее, перспективнее.`;
+
+// Варианты текста для кнопки "Далее"
+const nextButtonTexts = [
+    "Расскажи ещё →",
+    "Слушать дальше →", 
+    "Продолжай →",
+    "Что дальше? →",
+    "Далее →",
+    "И что же? →",
+    "Понятно, дальше →"
+];
 
 // Элементы DOM
-let startBtn, storyWindow, storyText, nextBtn, conclusionWindow, conclusionTextElement, continueBtn;
-let backBtn, restartBtn, playerChoices;
+let startBtn, storyWindow, storyText, nextBtn, backBtn, conclusionWindow, conclusionTextElement, continueBtn;
 
 // Текущая часть рассказа
 let currentPart = 0;
 let isTyping = false;
 let typingSpeed = 30;
 let typeTimeout = null;
-
-// История диалогов
-let dialogHistory = [];
 
 // Инициализация
 function initGame() {
@@ -33,19 +40,26 @@ function initGame() {
     storyWindow = document.getElementById('storyWindow');
     storyText = document.getElementById('storyText');
     nextBtn = document.getElementById('nextBtn');
+    backBtn = document.getElementById('backBtn');
     conclusionWindow = document.getElementById('conclusionWindow');
     conclusionTextElement = document.getElementById('conclusionText');
     continueBtn = document.getElementById('continueBtn');
     
-    // Создаём кнопки игрока
-    createPlayerButtons();
+    // Проверяем, найдены ли элементы
+    if (!startBtn) {
+        console.error('Элемент startBtn не найден!');
+        return;
+    }
     
     // Начать рассказ
     startBtn.addEventListener('click', startStory);
     
-    // Кнопка "Далее"
+    // Кнопки навигации
     nextBtn.style.display = 'none';
+    backBtn.style.display = 'none';
+    
     nextBtn.addEventListener('click', showNextPart);
+    backBtn.addEventListener('click', goBack);
     
     // Кнопка финального перехода
     continueBtn.addEventListener('click', function() {
@@ -59,83 +73,10 @@ function initGame() {
     console.log('Игра инициализирована!');
 }
 
-// Создаём кнопки действий игрока
-function createPlayerButtons() {
-    // Контейнер для кнопок игрока
-    const playerButtons = document.createElement('div');
-    playerButtons.className = 'player-buttons';
-    playerButtons.style.cssText = `
-        position: absolute;
-        bottom: 50px;
-        left: 50px;
-        display: flex;
-        gap: 15px;
-        z-index: 10;
-        display: none;
-    `;
-    
-    // Кнопка "Расскажи дальше"
-    const tellMoreBtn = document.createElement('button');
-    tellMoreBtn.id = 'tellMoreBtn';
-    tellMoreBtn.className = 'player-btn';
-    tellMoreBtn.innerHTML = '🗣️ Расскажи дальше';
-    tellMoreBtn.addEventListener('click', showNextPart);
-    
-    // Кнопка "Вернуться назад"
-    const backBtn = document.createElement('button');
-    backBtn.id = 'backBtn';
-    backBtn.className = 'player-btn';
-    backBtn.innerHTML = '↩️ Вернуться назад';
-    backBtn.addEventListener('click', goBack);
-    
-    // Кнопка "Повторить"
-    const restartBtn = document.createElement('button');
-    restartBtn.id = 'restartBtn';
-    restartBtn.className = 'player-btn';
-    restartBtn.innerHTML = '🔄 Начать заново';
-    restartBtn.addEventListener('click', restartStory);
-    
-    // Кнопка "Что было раньше?"
-    const historyBtn = document.createElement('button');
-    historyBtn.id = 'historyBtn';
-    historyBtn.className = 'player-btn';
-    historyBtn.innerHTML = '📜 Что было раньше?';
-    historyBtn.addEventListener('click', showHistory);
-    
-    playerButtons.appendChild(tellMoreBtn);
-    playerButtons.appendChild(backBtn);
-    playerButtons.appendChild(historyBtn);
-    playerButtons.appendChild(restartBtn);
-    
-    document.querySelector('.game-container').appendChild(playerButtons);
-    
-    // Сохраняем ссылки
-    playerChoices = {
-        tellMoreBtn: tellMoreBtn,
-        backBtn: backBtn,
-        restartBtn: restartBtn,
-        historyBtn: historyBtn,
-        container: playerButtons
-    };
-}
-
-// Показать кнопки игрока
-function showPlayerButtons() {
-    if (playerChoices && playerChoices.container) {
-        playerChoices.container.style.display = 'flex';
-        
-        // Настраиваем видимость кнопок в зависимости от контекста
-        playerChoices.backBtn.style.display = currentPart > 0 ? 'block' : 'none';
-        playerChoices.tellMoreBtn.style.display = !isTyping && currentPart < storyParts.length ? 'block' : 'none';
-        playerChoices.historyBtn.style.display = dialogHistory.length > 0 ? 'block' : 'none';
-    }
-}
-
-// Скрыть кнопки игрока
-function hidePlayerButtons() {
-    if (playerChoices && playerChoices.container) {
-        playerChoices.container.style.display = 'none';
-    }
+// Получить случайный текст для кнопки "Далее"
+function getRandomNextText() {
+    const randomIndex = Math.floor(Math.random() * nextButtonTexts.length);
+    return nextButtonTexts[randomIndex];
 }
 
 // Начать рассказ
@@ -145,23 +86,15 @@ function startStory() {
     startBtn.style.display = 'none';
     storyWindow.style.display = 'flex';
     currentPart = 0;
-    nextBtn.style.display = 'none';
     
-    // Очищаем историю
-    dialogHistory = [];
-    
-    // Добавляем первую реплику в историю
-    dialogHistory.push({
-        speaker: 'Князь',
-        text: storyParts[currentPart],
-        part: currentPart
-    });
+    // Показываем кнопки навигации
+    nextBtn.style.display = 'none'; // Скрываем пока печатается
+    backBtn.style.display = 'none'; // В начале нет куда возвращаться
     
     typeWriter(storyParts[currentPart], storyText);
-    showPlayerButtons();
 }
 
-// Эффект печатающейся машинки (без звука)
+// Эффект печатающейся машинки
 function typeWriter(text, element) {
     if (isTyping || !element) return;
     
@@ -185,14 +118,18 @@ function typeWriter(text, element) {
             // Показываем кнопки после завершения печати
             if (nextBtn) {
                 nextBtn.style.display = 'block';
-                if (currentPart === storyParts.length - 1) {
-                    nextBtn.textContent = 'К выводу →';
-                } else {
-                    nextBtn.textContent = 'Далее →';
-                }
+                nextBtn.textContent = getRandomNextText();
             }
             
-            showPlayerButtons();
+            // Показываем кнопку "Назад" если есть куда возвращаться
+            if (backBtn && currentPart > 0) {
+                backBtn.style.display = 'block';
+            }
+            
+            // Если это последняя часть, меняем текст кнопки "Далее"
+            if (currentPart === storyParts.length - 1) {
+                nextBtn.textContent = 'К выводу →';
+            }
         }
     }
     
@@ -211,18 +148,23 @@ function skipTyping() {
             conclusionTextElement.textContent = conclusionText;
         }
         
+        // Показываем кнопки сразу
         if (nextBtn && storyWindow.style.display === 'flex') {
             nextBtn.style.display = 'block';
+            nextBtn.textContent = getRandomNextText();
+            
             if (currentPart === storyParts.length - 1) {
                 nextBtn.textContent = 'К выводу →';
             }
         }
         
+        if (backBtn && currentPart > 0) {
+            backBtn.style.display = 'block';
+        }
+        
         if (continueBtn && conclusionWindow.style.display === 'flex') {
             continueBtn.style.display = 'block';
         }
-        
-        showPlayerButtons();
     }
 }
 
@@ -230,34 +172,20 @@ function skipTyping() {
 function showNextPart() {
     if (isTyping) return;
     
-    // Скрываем кнопку "Далее" на время перехода
+    // Скрываем кнопки на время перехода
     nextBtn.style.display = 'none';
+    backBtn.style.display = 'none';
     
     currentPart++;
     console.log('Переход к части:', currentPart);
     
     if (currentPart < storyParts.length) {
-        // Добавляем реплику в историю
-        dialogHistory.push({
-            speaker: 'Князь',
-            text: storyParts[currentPart],
-            part: currentPart
-        });
-        
         typeWriter(storyParts[currentPart], storyText);
     } else {
         storyWindow.style.display = 'none';
         if (conclusionWindow) {
             conclusionWindow.style.display = 'flex';
             continueBtn.style.display = 'none';
-            
-            // Добавляем вывод в историю
-            dialogHistory.push({
-                speaker: 'Князь',
-                text: conclusionText,
-                part: 'conclusion'
-            });
-            
             typeWriter(conclusionText, conclusionTextElement);
             
             const checkButton = setInterval(() => {
@@ -268,9 +196,6 @@ function showNextPart() {
             }, 100);
         }
     }
-    
-    // Обновляем кнопки игрока
-    showPlayerButtons();
 }
 
 // Вернуться назад
@@ -280,65 +205,21 @@ function goBack() {
         
         if (storyWindow.style.display === 'flex') {
             storyText.textContent = storyParts[currentPart];
+            
+            // Показываем кнопки
             nextBtn.style.display = 'block';
+            nextBtn.textContent = getRandomNextText();
             
             if (currentPart === storyParts.length - 1) {
                 nextBtn.textContent = 'К выводу →';
-            } else {
-                nextBtn.textContent = 'Далее →';
+            }
+            
+            // Показываем/скрываем кнопку "Назад"
+            if (backBtn) {
+                backBtn.style.display = currentPart > 0 ? 'block' : 'none';
             }
         }
-        
-        // Удаляем последнюю реплику из истории
-        if (dialogHistory.length > 0) {
-            dialogHistory.pop();
-        }
-        
-        showPlayerButtons();
     }
-}
-
-// Начать заново
-function restartStory() {
-    if (confirm('Начать историю заново?')) {
-        currentPart = 0;
-        dialogHistory = [];
-        
-        if (conclusionWindow.style.display === 'flex') {
-            conclusionWindow.style.display = 'none';
-        }
-        
-        storyWindow.style.display = 'flex';
-        storyText.textContent = '';
-        nextBtn.style.display = 'none';
-        
-        // Добавляем первую реплику в историю
-        dialogHistory.push({
-            speaker: 'Князь',
-            text: storyParts[currentPart],
-            part: currentPart
-        });
-        
-        typeWriter(storyParts[currentPart], storyText);
-        showPlayerButtons();
-    }
-}
-
-// Показать историю диалогов
-function showHistory() {
-    if (dialogHistory.length === 0) {
-        alert('История диалогов пока пуста.');
-        return;
-    }
-    
-    let historyText = '📜 ИСТОРИЯ ДИАЛОГОВ:\n\n';
-    
-    dialogHistory.forEach((entry, index) => {
-        historyText += `${index + 1}. ${entry.speaker}:\n`;
-        historyText += `"${entry.text.substring(0, 100)}${entry.text.length > 100 ? '...' : ''}"\n\n`;
-    });
-    
-    alert(historyText);
 }
 
 // Показать кнопку меню после завершения
@@ -369,9 +250,6 @@ function showMenuButton() {
     });
     
     document.querySelector('.game-container').appendChild(menuBtn);
-    
-    // Скрываем кнопки игрока в финале
-    hidePlayerButtons();
 }
 
 // Запуск при загрузке
